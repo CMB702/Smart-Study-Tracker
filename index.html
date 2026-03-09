@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AI Smart Study Tracker App</title>
+  <meta name="theme-color" content="#c96d3d" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <link rel="manifest" href="manifest.webmanifest" />
+  <link rel="apple-touch-icon" href="icons/icon-192.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;700&display=swap"
+    rel="stylesheet"
+  />
+  <link rel="stylesheet" href="study-tracker.css" />
+</head>
+<body>
+  <div class="app-shell">
+    <header class="topbar">
+      <div>
+        <p class="eyebrow">JEE Focus System</p>
+        <h1>AI Smart Study Tracker</h1>
+        <p class="subcopy">
+          Track daily study, manage backlog, review test performance, and get instant AI-style study insights.
+        </p>
+      </div>
+
+      <div class="topbar-actions">
+        <button id="demoDataBtn" class="button button-soft" type="button">Load Demo Data</button>
+        <button id="installAppBtn" class="button button-soft" type="button" hidden>Install App</button>
+        <button id="themeToggleBtn" class="button button-primary" type="button" aria-label="Toggle theme">
+          Dark mode
+        </button>
+      </div>
+    </header>
+
+    <section class="hero-grid">
+      <article class="hero-card hero-card-main">
+        <div class="hero-badges">
+          <span class="badge badge-highlight" id="todayStamp">Today</span>
+          <span class="badge" id="consistencyBadge">Consistency loading</span>
+        </div>
+        <h2 id="heroHeadline">Build disciplined prep, one focused day at a time.</h2>
+        <p id="heroText" class="hero-text">
+          Start logging lectures, questions, study hours, and tests. The tracker will turn your raw effort into a
+          clear progress system.
+        </p>
+        <div class="hero-quickstats">
+          <div>
+            <small>Next day target</small>
+            <strong id="nextDayTarget">0.0 hrs</strong>
+          </div>
+          <div>
+            <small>Backlog pressure</small>
+            <strong id="backlogPressure">Low</strong>
+          </div>
+          <div>
+            <small>Weakest area</small>
+            <strong id="weakSubjectHero">Physics</strong>
+          </div>
+        </div>
+      </article>
+
+      <article class="hero-card hero-card-side">
+        <p class="card-label">Study Streak</p>
+        <strong id="studyStreak" class="big-number">0</strong>
+        <span class="big-number-caption">days in a row</span>
+        <div class="streak-meter">
+          <div id="streakFill" class="streak-meter-fill"></div>
+        </div>
+        <p id="streakNote" class="muted-copy">Log at least one meaningful study session daily to grow your streak.</p>
+      </article>
+    </section>
+
+    <section class="metrics-grid" aria-label="Dashboard metrics">
+      <article class="metric-card">
+        <p>Today's study hours</p>
+        <strong id="todayHours">0.0</strong>
+        <span>Hours logged today</span>
+      </article>
+      <article class="metric-card">
+        <p>Questions solved</p>
+        <strong id="todayQuestions">0</strong>
+        <span>DPP, PYQ, module included</span>
+      </article>
+      <article class="metric-card">
+        <p>Lectures completed</p>
+        <strong id="todayLectures">0</strong>
+        <span>All subjects combined</span>
+      </article>
+      <article class="metric-card">
+        <p>Pending backlog</p>
+        <strong id="pendingBacklog">0</strong>
+        <span>Unfinished tasks and targets</span>
+      </article>
+      <article class="metric-card">
+        <p>Weekly productivity</p>
+        <strong id="weeklyScore">0</strong>
+        <span>Score out of 100</span>
+      </article>
+      <article class="metric-card">
+        <p>Consistency rating</p>
+        <strong id="weeklyConsistency">0%</strong>
+        <span>Active days this week</span>
+      </article>
+    </section>
+
+    <section class="content-grid">
+      <article class="panel panel-form">
+        <div class="panel-head">
+          <div>
+            <p class="eyebrow">Daily Study Entry</p>
+            <h2>Add a study log</h2>
+          </div>
+        </div>
+
+        <form id="studyEntryForm" class="form-grid" autocomplete="off">
+          <label>
+            <span>Date</span>
+            <input id="entryDate" name="date" type="date" required />
+          </label>
+
+          <label>
+            <span>Subject</span>
+            <select id="entrySubject" name="subject" required>
+              <option value="Physics">Physics</option>
+              <option value="Chemistry">Chemistry</option>
+              <option value="Maths">Maths</option>
+            </select>
+          </label>
+
+          <label class="full-span">
+            <span>Chapter / Topic</span>
+            <input id="entryChapter" name="chapter" type="text" maxlength="120" placeholder="Electrostatics, GOC, Matrices" required />
+          </label>
+
+          <label>
+            <span>Planned lectures</span>
+            <input id="plannedLectures" name="plannedLectures" type="number" min="0" step="1" value="0" />
+          </label>
+
+          <label>
+            <span>Lectures completed</span>
+            <input id="lecturesCompleted" name="lecturesCompleted" type="number" min="0" step="1" value="0" required />
+          </label>
+
+          <label>
+            <span>Planned questions</span>
+            <input id="plannedQuestions" name="plannedQuestions" type="number" min="0" step="1" value="0" />
+          </label>
+
+          <label>
+            <span>Questions solved</span>
+            <input id="questionsSolved" name="questionsSolved" type="number" min="0" step="1" value="0" required />
+          </label>
+
+          <label>
+            <span>Target study hours</span>
+            <input id="targetHours" name="targetHours" type="number" min="0" step="0.5" value="0" />
+          </label>
+
+          <label>
+            <span>Study hours</span>
+            <input id="studyHours" name="studyHours" type="number" min="0" step="0.5" value="2" required />
+          </label>
+
+          <label class="full-span inline-check">
+            <input id="revisionDone" name="revisionDone" type="checkbox" />
+            <span>Revision done today</span>
+          </label>
+
+          <label class="full-span">
+            <span>Notes</span>
+            <textarea id="entryNotes" name="notes" rows="4" maxlength="280" placeholder="Where time was lost, what improved, what needs revision tomorrow..."></textarea>
+          </label>
+
+          <label class="full-span">
+            <span>Daily focus rating</span>
+            <div class="range-wrap">
+              <input id="focusRating" name="focusRating" type="range" min="1" max="10" step="1" value="7" />
+              <strong id="focusRatingValue">7/10</strong>
+            </div>
+          </label>
+
+          <button class="button button-primary full-span" type="submit">Save Study Entry</button>
+        </form>
+      </article>
+
+      <article class="panel panel-ai">
+        <div class="panel-head">
+          <div>
+            <p class="eyebrow">AI Study Analysis</p>
+            <h2>Smart prep insights</h2>
+          </div>
+        </div>
+
+        <div class="insight-stack">
+          <div class="insight-card">
+            <span class="insight-tag">Weak subject</span>
+            <h3 id="weakSubject">No signal yet</h3>
+            <p id="weakSubjectNote">Add a few study sessions or tests to identify your weakest area.</p>
+          </div>
+
+          <div class="insight-card">
+            <span class="insight-tag">Low consistency days</span>
+            <h3 id="consistencyDays">No gaps detected</h3>
+            <p id="consistencyNote">The tracker checks your recent 14-day pattern to spot low-output days.</p>
+          </div>
+
+          <div class="insight-card">
+            <span class="insight-tag">Backlog warning</span>
+            <h3 id="backlogWarning">Backlog under control</h3>
+            <p id="backlogWarningNote">Unfinished lectures, pending questions, and missed hour targets show up here.</p>
+          </div>
+
+          <div class="insight-card insight-card-accent">
+            <span class="insight-tag">Tomorrow plan</span>
+            <h3 id="nextDayHours">0.0 hours</h3>
+            <p id="nextDayNote">The next-day target adapts to your recent pace, backlog, and test performance.</p>
+          </div>
+        </div>
+      </article>
+    </section>
+
+    <section class="content-grid secondary-grid">
+      <article class="panel">
+        <div class="panel-head">
+          <div>
+            <p class="eyebrow">Test Performance Tracker</p>
+            <h2>Add mock test result</h2>
+          </div>
+        </div>
+
+        <form id="testForm" class="form-grid" autocomplete="off">
+          <label class="full-span">
+            <span>Test name</span>
+            <input id="testName" name="name" type="text" maxlength="100" placeholder="Allen Major Test 04" required />
+          </label>
+
+          <label>
+            <span>Date</span>
+            <input id="testDate" name="date" type="date" required />
+          </label>
+
+          <label>
+            <span>Score</span>
+            <input id="testScore" name="score" type="number" min="0" step="1" required />
+          </label>
+
+          <label>
+            <span>Maximum marks</span>
+            <input id="testMaxMarks" name="maxMarks" type="number" min="1" step="1" value="300" required />
+          </label>
+
+          <label>
+            <span>Physics marks</span>
+            <input id="physicsMarks" name="physicsMarks" type="number" min="0" step="1" value="0" required />
+          </label>
+
+          <label>
+            <span>Chemistry marks</span>
+            <input id="chemistryMarks" name="chemistryMarks" type="number" min="0" step="1" value="0" required />
+          </label>
+
+          <label>
+            <span>Maths marks</span>
+            <input id="mathsMarks" name="mathsMarks" type="number" min="0" step="1" value="0" required />
+          </label>
+
+          <button class="button button-primary full-span" type="submit">Save Test Result</button>
+        </form>
+      </article>
+
+      <article class="panel panel-backlog">
+        <div class="panel-head">
+          <div>
+            <p class="eyebrow">Backlog Manager</p>
+            <h2>Auto-tracked pending work</h2>
+          </div>
+        </div>
+
+        <div class="backlog-summary">
+          <div>
+            <small>Unfinished lectures</small>
+            <strong id="unfinishedLectures">0</strong>
+          </div>
+          <div>
+            <small>Pending questions</small>
+            <strong id="pendingQuestions">0</strong>
+          </div>
+          <div>
+            <small>Missed hour targets</small>
+            <strong id="missedTargets">0</strong>
+          </div>
+        </div>
+
+        <div id="backlogList" class="list-stack"></div>
+      </article>
+    </section>
+
+    <section class="analytics-grid">
+      <article class="panel">
+        <div class="panel-head">
+          <div>
+            <p class="eyebrow">Progress Analytics</p>
+            <h2>Weekly study hours</h2>
+          </div>
+        </div>
+        <div id="weeklyHoursChart" class="bar-chart"></div>
+      </article>
+
+      <article class="panel">
+        <div class="panel-head">
+          <div>
+            <p class="eyebrow">Progress Analytics</p>
+            <h2>Questions by subject</h2>
+          </div>
+        </div>
+        <div id="subjectQuestionsChart" class="bar-chart bar-chart-subject"></div>
+      </article>
+
+      <article class="panel">
+        <div class="panel-head">
+          <div>
+            <p class="eyebrow">Progress Analytics</p>
+            <h2>Chapter completion</h2>
+          </div>
+        </div>
+        <div id="chapterProgressList" class="progress-list"></div>
+      </article>
+    </section>
+
+    <section class="records-grid">
+      <article class="panel">
+        <div class="panel-head">
+          <div>
+            <p class="eyebrow">Recent Study Logs</p>
+            <h2>Daily entries</h2>
+          </div>
+          <button id="clearStudyLogsBtn" class="button button-soft" type="button">Clear logs</button>
+        </div>
+        <div id="studyLogList" class="record-list"></div>
+      </article>
+
+      <article class="panel">
+        <div class="panel-head">
+          <div>
+            <p class="eyebrow">Performance Trend</p>
+            <h2>Mock test growth</h2>
+          </div>
+        </div>
+        <svg id="testTrendChart" class="trend-chart" viewBox="0 0 460 220" aria-label="Test performance trend"></svg>
+        <div id="testSummaryList" class="record-list compact-record-list"></div>
+      </article>
+
+      <article class="panel">
+        <div class="panel-head">
+          <div>
+            <p class="eyebrow">Saved Tests</p>
+            <h2>Latest test records</h2>
+          </div>
+          <button id="clearTestsBtn" class="button button-soft" type="button">Clear tests</button>
+        </div>
+        <div id="testList" class="record-list"></div>
+      </article>
+    </section>
+  </div>
+
+  <script src="study-tracker.js"></script>
+</body>
+</html>
+
+
+
+
+
+
